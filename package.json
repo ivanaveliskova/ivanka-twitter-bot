@@ -1,0 +1,18 @@
+{
+  "name": "twitter-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "twitterBot.js",
+  "dependencies": {
+    "async": "^2.0.0-rc.5",
+    "twit": "^2.2.4",
+    "wordfilter": "^0.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node twitterBot.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
