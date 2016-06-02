@@ -3,24 +3,27 @@ var async       = require('async');
 var path        = require('path');
 var fs          = require('fs');
 
-
+// Gets the 
 var words = path.join(__dirname, './data/words.json');
 // var wordFilter  = require('wordfilter');
 
-// Sets up time interval for set timeout
-var days, dayInterval;
 
-// Here you set how often your bot will tweet, currently it is set to every day
-dayInterval = 0.5;
+// Function for finding the diff between 2 arrays
+// Will be super useful for finding new people to follow. Thank you StackOverflow
+Array.prototype.diff = function(a) {
+    return this.filter(function(i) {return a.indexOf(i) < 0;});
+};
 
-// This calculates the ms used in setInterval from the number of days set above
-days = dayInterval * 24 * 60 * 60 * 1000;
+// This calculates the ms used in setInterval from the number of hours set
+var hoursToMs = function(hours) {
+    return hours * 60 * 60 * 1000;
+}
 
 if (!process.env.CONSUMER_KEY) {
     var env = require('./env.js')
 }
 
-// Include your access information below
+// Include your access information below, keep it secret, shhhh!
 var secret = {
     "consumer_key": process.env.CONSUMER_KEY,
     "consumer_secret": process.env.CONSUMER_SECRET,
@@ -34,29 +37,6 @@ var Tweet = new Twit(secret);
 
 
 
-// var wordnikKey = process.env.WORDNIK_API_KEY;
-
-// Tweet.post('statuses/update', {status: 'This is a test! :-)'},  function(error, tweet, response){
-//   if(error){
-//     console.log(error);
-//   }
-//   console.log(tweet);  // Tweet body.
-//   console.log(response);  // Raw response object.
-// });
-
-// Create a random query, probably from an array of prechosen queries related to something that I wish to retweet (JS, HTML, CSS, etc)
-// var query = "callbackwomen";
-
-// Tweet.get('search/tweets', { q: query, count: 10 }, function(err, data, response) {
-//     // Gets the id of the tweet to be retweeted
-//     console.log(data);
-//     console.log(data.statuses[0].id);
-
-//     // Allows to retweet 
-//     // T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, data, response) {
-//     //     console.log(data)
-//     // })
-// });
 
 // This should be tracking/listening for when things occur and then do something with that data.
 
@@ -87,12 +67,76 @@ stream.on('tweet', function (tweet) {
                     console.log(error);
                 }
             });
-        });
-        
+        }); 
     }
-
-
 });
+
+
+var followHowOften = hoursToMs(24);
+
+setInterval(function() {
+    Tweet.get('friends/ids', {screen_name: 'ivanaveliskova'}, function(err, data, response) {
+        if(!err) {
+            var ivanaFollows = data.ids;
+
+            Tweet.get('friends/ids', {screen_name: 'IvankaBot'}, function(error, newData, res) {
+                if (!err) {
+                    var botFollows = newData.ids;
+                    Tweet.get('users/show', {screen_name: 'IvankaBot'}, function(errors, botData, responses) {
+                        if (errors) {
+                            console.log(errors);
+                        }
+                        var botID = botData.id;
+
+                        botFollows.push(botID);
+
+                        var difference = ivanaFollows.diff(botFollows);
+
+                        var randomNum = Math.floor(Math.random() * difference.length);
+
+                        var randomUser = difference[randomNum];
+                        Tweet.post('friendships/create', { user_id: randomUser}, function(errorMore, successFollow, respond) {
+                            if (errorMore) {
+                                console.log(errorMore);
+                            }
+                        });
+                        
+                    });
+                } else {
+                    console.log(error);
+                }
+            })
+
+        } else {
+            console.log(err);
+        }
+    });
+}, followHowOften);
+
+// var wordnikKey = process.env.WORDNIK_API_KEY;
+
+// Tweet.post('statuses/update', {status: 'This is a test! :-)'},  function(error, tweet, response){
+//   if(error){
+//     console.log(error);
+//   }
+//   console.log(tweet);  // Tweet body.
+//   console.log(response);  // Raw response object.
+// });
+
+// Create a random query, probably from an array of prechosen queries related to something that I wish to retweet (JS, HTML, CSS, etc)
+// var query = "callbackwomen";
+
+// Tweet.get('search/tweets', { q: query, count: 10 }, function(err, data, response) {
+//     // Gets the id of the tweet to be retweeted
+//     console.log(data);
+//     console.log(data.statuses[0].id);
+
+//     // Allows to retweet 
+//     // T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, data, response) {
+//     //     console.log(data)
+//     // })
+// });
+
 
 // This was a test to see if one can have a listener and a regular post working at the same time
 // SUCCESS!
@@ -126,3 +170,9 @@ stream.on('tweet', function (tweet) {
 //     }
 // }, days);
 
+
+// Function for finding the diff between 2 arrays
+// Will be super useful for finding new people to follow. Thank you StackOverflow
+// Array.prototype.diff = function(a) {
+//     return this.filter(function(i) {return a.indexOf(i) < 0;});
+// };
