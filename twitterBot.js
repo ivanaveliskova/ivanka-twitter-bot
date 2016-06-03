@@ -3,7 +3,7 @@ var async       = require('async');
 var path        = require('path');
 var fs          = require('fs');
 
-// Gets the 
+// Gets the words json data for different words/phrases
 var words = path.join(__dirname, './data/words.json');
 // var wordFilter  = require('wordfilter');
 
@@ -112,67 +112,3 @@ setInterval(function() {
         }
     });
 }, followHowOften);
-
-// var wordnikKey = process.env.WORDNIK_API_KEY;
-
-// Tweet.post('statuses/update', {status: 'This is a test! :-)'},  function(error, tweet, response){
-//   if(error){
-//     console.log(error);
-//   }
-//   console.log(tweet);  // Tweet body.
-//   console.log(response);  // Raw response object.
-// });
-
-// Create a random query, probably from an array of prechosen queries related to something that I wish to retweet (JS, HTML, CSS, etc)
-// var query = "callbackwomen";
-
-// Tweet.get('search/tweets', { q: query, count: 10 }, function(err, data, response) {
-//     // Gets the id of the tweet to be retweeted
-//     console.log(data);
-//     console.log(data.statuses[0].id);
-
-//     // Allows to retweet 
-//     // T.post('statuses/retweet/:id', { id: '343360866131001345' }, function (err, data, response) {
-//     //     console.log(data)
-//     // })
-// });
-
-
-// This was a test to see if one can have a listener and a regular post working at the same time
-// SUCCESS!
-
-// setTimeout(function() {
-//     Tweet.post('statuses/update', {status: 'Just a random test to see what happens'},  function(error, tweet, response){
-//         if(error){
-//             console.log(error);
-//         }
-//     });
-// }, 60000)
-
-
-// // Sets up the repeating tweet
-// setInterval(function() {
-
-// // Creates a random number to determine what random action should be performed
-// var randomNumber = Math.floor(Math.random() * 100);
-//     if (randomNumber < 25) {
-//         // Tweet any random tweet consisted of random words
-//         console.log("Less than 25");
-//     } else if (randomNumber < 50) {
-//         // Start a hashtag
-//         console.log("less than 50");
-//     } else if (randomNumber < 75) {
-//         // Random fact
-//         console.log('less than 75');
-//     } else {
-//         // Retweet a tech user's tweet (maybe if it contains HTML/CSS/or JS?)
-//         console.log('less than 100');
-//     }
-// }, days);
-
-
-// Function for finding the diff between 2 arrays
-// Will be super useful for finding new people to follow. Thank you StackOverflow
-// Array.prototype.diff = function(a) {
-//     return this.filter(function(i) {return a.indexOf(i) < 0;});
-// };
