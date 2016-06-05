@@ -134,22 +134,22 @@ var Tweet = new Twit(secret);
 // Retweets current job opening for front end developer             //
 //////////////////////////////////////////////////////////////////////
 
-var retweetJob = hoursToMs(10);
+// var retweetJob = hoursToMs(10);
 
-setInterval(function() {
-    Tweet.get('search/tweets', { q: 'front end developer', result_type: 'recent', count: '1'}, function(err, data, res) {
-        if (err) {
-            console.log(err);
-        } else {
-            var tweetID = data.statuses[0].id_str;
-            Tweet.post('statuses/retweet/:id', { id: tweetID }, function(error, dataNew, response) {
-                if (error) {
-                    console.log(error);
-                }
-            });
-        }
-    });
-}, retweetJob);
+// setInterval(function() {
+//     Tweet.get('search/tweets', { q: 'front end developer', result_type: 'recent', count: '1'}, function(err, data, res) {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             var tweetID = data.statuses[0].id_str;
+//             Tweet.post('statuses/retweet/:id', { id: tweetID }, function(error, dataNew, response) {
+//                 if (error) {
+//                     console.log(error);
+//                 }
+//             });
+//         }
+//     });
+// }, retweetJob);
 
 //////////////////////////////////////////////////////////////////////
 // End working                                                      //

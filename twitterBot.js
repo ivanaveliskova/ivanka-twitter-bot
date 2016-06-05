@@ -72,7 +72,7 @@ stream.on('tweet', function (tweet) {
 });
 
 
-var followHowOften = hoursToMs(24);
+var followHowOften = hoursToMs(12);
 
 setInterval(function() {
     Tweet.get('friends/ids', {screen_name: 'ivanaveliskova'}, function(err, data, response) {
@@ -112,3 +112,21 @@ setInterval(function() {
         }
     });
 }, followHowOften);
+
+
+var retweetJob = hoursToMs(5);
+
+setInterval(function() {
+    Tweet.get('search/tweets', { q: 'front end developer', result_type: 'recent', count: '1'}, function(err, data, res) {
+        if (err) {
+            console.log(err);
+        } else {
+            var tweetID = data.statuses[0].id_str;
+            Tweet.post('statuses/retweet/:id', { id: tweetID }, function(error, dataNew, response) {
+                if (error) {
+                    console.log(error);
+                }
+            });
+        }
+    });
+}, retweetJob);
