@@ -1,11 +1,16 @@
 var Twit        = require('twit');
-var async       = require('async');
 var path        = require('path');
 var fs          = require('fs');
+var wordFilter  = require('wordfilter');
+var Client      = require('node-rest-client').Client;
 
-// Gets the 
+// sets location
+var lat = 39.9526,
+    long = -75.1652;
+
+
+// Gets the words json data for different words/phrases
 var words = path.join(__dirname, './data/words.json');
-// var wordFilter  = require('wordfilter');
 
 // Function for finding the diff between 2 arrays
 // Will be super useful for finding new people to follow. Thank you StackOverflow
@@ -16,11 +21,10 @@ Array.prototype.diff = function(a) {
 // This calculates the ms used in setInterval from the number of hours set
 var hoursToMs = function(hours) {
     return hours * 60 * 60 * 1000;
-}
-
+};
 
 if (!process.env.CONSUMER_KEY) {
-    var env = require('./env.js')
+    var env = require('./env.js');
 }
 
 // Include your access information below, keep it secret, shhhh!
@@ -32,10 +36,93 @@ var secret = {
 };
 
 
+//////////////////////
+//   Word getting   //
+//////////////////////
+
+// Gets key
+var wordnikkey = process.env.WORDNIK_API_KEY;
+
+// creates a client
+var wordChecker = new Client();
+
+
+// Sets the needed arguments for getting the data
+var args = {
+    headers: { "Content-Type": "application/json; charset=utf-8" }
+};
+
+// Sets the URL
+// This URL in particular gets 10 random nouns
+var word = 'Atharvaveda';
+var wordnikNoun = 'http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&includePartOfSpeech=noun&limit=10&api_key=' + wordnikkey;
+var wordnikVerb = 'http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&includePartOfSpeech=verb&limit=10&api_key=' + wordnikkey;
+var wordnikAdj = 'http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&includePartOfSpeech=adjective&limit=10&api_key=' + wordnikkey;
+var wordnikAdv = 'http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&includePartOfSpeech=adverb&limit=10&api_key=' + wordnikkey;
+var wordnikProperNoun = 'http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&includePartOfSpeech=proper-noun&limit=10&api_key=' + wordnikkey;
+var wordnikDef = 'http://api.wordnik.com:80/v4/word.json/'+ word +'/definitions?limit=1&api_key=' + wordnikkey;
+
+
+// Gets my nouns
+// wordChecker.get(wordnikNoun, args, function(data, response) {
+//     console.log(data);
+// }).on('error', function(err) {
+//     console.log(err);
+// });
+
+// Gets proper nouns and selects random one
+// wordChecker.get(wordnikProperNoun, args, function(data, response) {
+//     // Get random number out of 10 to choose random word
+//     var randomNum = Math.floor(Math.random() * 10);
+
+//     console.log(data[randomNum].word);
+// }).on('error', function(err) {
+//     console.log(err);
+// });
+
+
+// Looks up current word
+// wordChecker.get(wordnikDef, args, function(data, response) {
+//     console.log(data[0].partOfSpeech);
+// }).on('error', function(err) {
+//     console.log(err);
+// });
+
+
+
+//////////////////////
+// End word getting //
+//////////////////////
+
+
 // Creates a new instance of twitter to allow for posting and getting info.
 var Tweet = new Twit(secret);
 
-// var wordnikKey = process.env.WORDNIK_API_KEY;
+///////////////////////////
+// Creates random tweets //
+///////////////////////////
+
+var tweetHowOften = hoursToMs(10);
+
+
+// setInterval( function() {
+//     // Move code in here
+// }, tweetHowOften);
+
+// Tweet.get('search/tweets', { q: 'qotd', result_type: 'recent', count: '10'}, function(err, data, response) {
+//     if(!err) {
+//         console.log(data);
+//     } else {
+//         console.log(err);
+//     }
+// });
+
+
+
+///////////////////////////
+//   End random tweets   //
+///////////////////////////
+
 
 //////////////////////////////////////////////////////////////////
 // This code definitely works                                   //
@@ -155,6 +242,8 @@ var Tweet = new Twit(secret);
 // End working                                                      //
 //////////////////////////////////////////////////////////////////////
 
+
+// New test code
 
 
 

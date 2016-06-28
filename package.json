@@ -4,15 +4,14 @@
   "description": "",
   "main": "twitterBot.js",
   "dependencies": {
-    "async": "^2.0.0-rc.5",
+    "node-rest-client": "^1.8.0",
     "twit": "^2.2.4",
     "wordfilter": "^0.2.6"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node twitterBot.js",
-    "test": "node twitterBotTest.js"
+    "test": "nodemon twitterBotTest.js",
+    "start": "node twitterBot.js"
   },
   "author": "",
   "license": "ISC"

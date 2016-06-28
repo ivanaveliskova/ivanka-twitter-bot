@@ -1,11 +1,9 @@
 var Twit        = require('twit');
-var async       = require('async');
 var path        = require('path');
 var fs          = require('fs');
 
 // Gets the words json data for different words/phrases
 var words = path.join(__dirname, './data/words.json');
-// var wordFilter  = require('wordfilter');
 
 
 // Function for finding the diff between 2 arrays
@@ -17,10 +15,10 @@ Array.prototype.diff = function(a) {
 // This calculates the ms used in setInterval from the number of hours set
 var hoursToMs = function(hours) {
     return hours * 60 * 60 * 1000;
-}
+};
 
 if (!process.env.CONSUMER_KEY) {
-    var env = require('./env.js')
+    var env = require('./env.js');
 }
 
 // Include your access information below, keep it secret, shhhh!
@@ -40,7 +38,7 @@ var Tweet = new Twit(secret);
 
 // This should be tracking/listening for when things occur and then do something with that data.
 
-var stream = Tweet.stream('statuses/filter', { track: '@ivankabot' })
+var stream = Tweet.stream('statuses/filter', { track: '@ivankabot' });
 
 stream.on('tweet', function (tweet) {
 
@@ -72,7 +70,7 @@ stream.on('tweet', function (tweet) {
 });
 
 
-var followHowOften = hoursToMs(12);
+var followHowOften = hoursToMs(20);
 
 setInterval(function() {
     Tweet.get('friends/ids', {screen_name: 'ivanaveliskova'}, function(err, data, response) {
@@ -105,7 +103,7 @@ setInterval(function() {
                 } else {
                     console.log(error);
                 }
-            })
+            });
 
         } else {
             console.log(err);
@@ -114,7 +112,7 @@ setInterval(function() {
 }, followHowOften);
 
 
-var retweetJob = hoursToMs(5);
+var retweetJob = hoursToMs(10);
 
 setInterval(function() {
     Tweet.get('search/tweets', { q: 'front end developer', result_type: 'recent', count: '1'}, function(err, data, res) {
